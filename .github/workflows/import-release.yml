@@ -1,0 +1,20 @@
+name: Import desktop release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download private build artifacts
+        env:
+          GH_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: gh release download v0.1.0 --repo Zios-dev/lightshow --dir artifacts
+      - name: Publish public download artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload v0.1.0 artifacts/* --repo Zios-dev/worshipframe-downloads --clobber
